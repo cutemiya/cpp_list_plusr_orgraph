@@ -1,107 +1,109 @@
-#include <iostream>
 #include "structure.h"
+#include <iostream>
 
-using namespace std;
+int count = 0;
+Top* buffer[20];
 
-void list::addTop(const int _val) {
-    Node *current = new Node(_val);
+Top addTop(const int _index) {
+    Top top;
+    top.index = _index;
 
-    if (first == nullptr) {
-        first = current;
-        last = current;
+    buffer[count++] = &top;
+
+    return top;
+}
+
+void addArc(Top* first, Top* second) {
+    Node* current = new Node;
+    current->toTop = second;
+
+    if (first->first == nullptr) {
+        first->first = current;
+        first->last = current;
         return;
     }
 
-    last->next = current;
-    last = current;
+    count++;
+    first->last->next = current;
+    first->last = current;
 }
 
-void list::removeTop() {
-    if (first == nullptr) {
-        return;
+void deleteTop(Top* top) {
+
+    for (int i = 0; i < count; ++i) {
+
+        Top* currentTop = buffer[i];
+        if(!top) continue;
+
+        Node* current = currentTop->first;
+
+        while (current) {
+            if (current->toTop == top) {
+                current->toTop = nullptr;
+                break;
+            }
+            current = current->next;
+        }
+
+        if(buffer[i] == top) {
+            buffer[i] = nullptr;
+        }
     }
 
-    if (first == last) {
-        first = first->next;
-        first = nullptr;
-        delete first;
-        return;
-    }
-
-    Node *current = first;
-    while (current->next != last) {
-        current = current->next;
-    }
-    current->next = nullptr;
-    delete last;
-    last = current;
+    top = nullptr;
+    delete top;
 }
 
-void list::print() {
-    if (first == nullptr) {
-        return;
-    }
-    Node *current = first;
 
-    cout << "[ ";
-    while (current) {
-        cout << current->val << " ";
-        current = current->next;
-    }
-    cout << "]\n";
-}
+void print() {
+    for(int i = 0; i < count; ++i) {
+        Top* top = buffer[i];
 
-Node* list::operator[](const int index) {
-    if (first == nullptr) {
-        return nullptr;
-    }
+        if(!top) continue;
 
-    Node *current = first;
-    for (int i = 0; i < index; i++) {
-        current = current->next;
-        if (!current) return nullptr;
-    }
-    return current;
-}
+        Node* current = top->first;
 
-void list::addArc(const int _val, Node *node) {
-    Node *current = first;
-    while (current && current->val != _val) {
-        current = current->next;
-    }
-    if (current && current->val == _val) {
-        current->buffer[current->count++] = node;
-    } else {
-        std::cout << "This top is not defined" << std::endl;
-    }
-}
+        std::cout << top->index;
 
-void list::removeArc(const int _val, Node *node) {
-    Node *current = first;
-    while (current && current->val != _val) {
-        current = current->next;
-    }
-    if (current && current->val == _val) {
-        for (int i = 0; i < current->count; ++i) {
-            if (current->buffer[i]->val == node->val) {
-                current->buffer[i] = nullptr;
+        while(current) {
+            if (!current->toTop) {
+                current = current->next;
+            } else {
+                std::cout << "<" << current->toTop->index;
+                current = current->next;
             }
         }
-    } else {
-        cout << "This top is not defined" << endl;
+        std::cout << std::endl;
     }
 }
 
-void list::printArcs() {
-    Node *current = first;
-    while (current) {
-        cout << current->val << " -> ";
-        for (int i = 0; i < current->count; ++i) {
-            if ((current->buffer[i] != nullptr) && (current->buffer[i]->val != 0)) {
-                cout << current->buffer[i]->val << " -> ";
-            }
+void deleteArc(Top* first, Top* second) {
+    Node* current = first->first;
+
+    while(current) {
+        if(current->toTop == second) {
+            current->toTop = nullptr;
+            break;
         }
-        cout << "end\n";
         current = current->next;
+    }
+}
+
+void printMatrix() {
+    for(int i = 0; i < count; ++i) {
+        Top* top = buffer[i];
+        if (!top) continue;
+        std::cout << "\t" << top->index;
+    }
+    std::cout << std::endl;
+
+    for(int i = 0; i < count; ++i) {
+        Top* top = buffer[i];
+        if (!top) continue;
+        std::cout << top->index;
+
+        // some code
+
+        std::cout << std::endl << std::endl;
     }
 }
