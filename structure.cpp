@@ -29,11 +29,9 @@ void addArc(Top* first, Top* second) {
 }
 
 void deleteTop(Top* top) {
-
-    for (int i = 0; i < count; ++i) {
-
+    for(int i = 0; i < count; ++i) {
         Top* currentTop = buffer[i];
-        if(!top) continue;
+        if(!currentTop) continue;
 
         Node* current = currentTop->first;
 
@@ -89,20 +87,46 @@ void deleteArc(Top* first, Top* second) {
     }
 }
 
+bool in(unsigned int index, unsigned int arr[], int size) {
+    for(int i = 0; i < size; ++i) {
+        if(arr[i] == index) return true;
+    }
+
+    return false;
+}
+
 void printMatrix() {
+    std::cout << std::endl << std::endl << "#";
     for(int i = 0; i < count; ++i) {
         Top* top = buffer[i];
         if (!top) continue;
         std::cout << "\t" << top->index;
     }
-    std::cout << std::endl;
+    std::cout << std::endl << std::endl;
 
     for(int i = 0; i < count; ++i) {
         Top* top = buffer[i];
         if (!top) continue;
         std::cout << top->index;
 
-        // some code
+        Node* current = top->first;
+        unsigned int arr[20];
+        int arrCount = 0;
+
+        while(current) {
+            if(!current->toTop) {
+                current = current->next;
+            } else {
+                arr[arrCount++] = current->toTop->index;
+                current = current->next;
+            }
+        }
+
+        for (int l = 0; l < count; ++l) {
+            Top* currentTop = buffer[l];
+            if (!currentTop) continue;
+            std::cout << "\t" << in(currentTop->index, arr, arrCount);
+        }
 
         std::cout << std::endl << std::endl;
     }

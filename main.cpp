@@ -1,16 +1,22 @@
 #include "structure.h"
-using namespace std;
 
 int main() {
+    Top fTop = addTop(1);
+    Top sTop = addTop(4);
+    Top tTop = addTop(6);
 
-    Top top = addTop(1);
-    Top top2 = addTop(4);
-    Top top4 = addTop(6);
 
+    addArc(&fTop, &sTop);
+    addArc(&fTop, &tTop);
+    addArc(&tTop, &sTop);
 
-    addArc(&top2, &top4);
-    deleteArc(&top2, &top4);
-    deleteTop(&top2);
+    printMatrix();
+
+    deleteArc(&fTop, &sTop);
+
+    printMatrix();
+
+    deleteTop(&sTop);
 
     printMatrix();
 
