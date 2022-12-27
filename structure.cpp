@@ -47,9 +47,6 @@ void deleteTop(Top* top) {
             buffer[i] = nullptr;
         }
     }
-
-    top = nullptr;
-    delete top;
 }
 
 
